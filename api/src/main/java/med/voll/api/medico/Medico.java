@@ -7,8 +7,8 @@ import org.hibernate.proxy.*;
 
 import java.util.*;
 
-@Table(name="medicos")
-@Entity(name="Medico")
+@Table(name = "medicos")
+@Entity(name = "Medico")
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
@@ -17,23 +17,43 @@ public class Medico {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    
+
     private String nombre;
     private String email;
     private String documento;
     private String telefono;
+    private boolean activo;
     @Enumerated(EnumType.STRING)
     private Especialidad especialidad;
     @Embedded
     private Direccion direccion;
 
     public Medico(DatosDeRegistroMedico datosDeRegistroMedico) {
+
+        this.activo = true;
         this.nombre = datosDeRegistroMedico.nombre();
         this.email = datosDeRegistroMedico.email();
         this.documento = datosDeRegistroMedico.documento();
         this.especialidad = datosDeRegistroMedico.especialidad();
         this.direccion = new Direccion(datosDeRegistroMedico.direccion());
         this.telefono = datosDeRegistroMedico.telefono();
+    }
+
+
+    public void actualizarDatos(DatosActualizacionMedico datosActualizacionMedico) {
+        if (datosActualizacionMedico.nombre() != null) {
+            this.nombre = datosActualizacionMedico.nombre();
+        }
+        if (datosActualizacionMedico.documento() != null) {
+            this.documento = datosActualizacionMedico.documento();
+        }
+        if (datosActualizacionMedico.direccion() != null) {
+            this.direccion = direccion.actualizarDatos(datosActualizacionMedico.direccion());
+        }
+    }
+
+    public void desactivarMedico() {
+        this.activo = false;
     }
 
     @Override
@@ -51,4 +71,5 @@ public class Medico {
     public final int hashCode() {
         return this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass().hashCode() : getClass().hashCode();
     }
+
 }

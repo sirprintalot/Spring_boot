@@ -1,0 +1,186 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2709
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fswiss\fcharset0 Helvetica-Bold;\f1\froman\fcharset0 Times-Roman;\f2\fmodern\fcharset0 Courier;
+\f3\fnil\fcharset0 HelveticaNeue-Bold;\f4\froman\fcharset0 Times-Bold;\f5\froman\fcharset0 Times-Italic;
+\f6\fmodern\fcharset0 Courier-Bold;}
+{\colortbl;\red255\green255\blue255;\red47\green54\blue60;\red233\green238\blue239;\red255\green255\blue255;
+\red43\green149\blue222;\red236\green240\blue242;\red7\green68\blue184;\red203\green35\blue57;\red91\green40\blue180;
+\red179\green179\blue179;\red87\green96\blue106;}
+{\*\expandedcolortbl;;\cssrgb\c23922\c27451\c30196;\cssrgb\c92941\c94510\c94902;\cssrgb\c100000\c100000\c100000;
+\cssrgb\c19608\c65490\c89804;\cssrgb\c94118\c95294\c96078;\cssrgb\c0\c36078\c77255;\cssrgb\c84314\c22745\c28627;\cssrgb\c43529\c25882\c75686;
+\cssrgb\c75294\c75294\c75294;\cssrgb\c41569\c45098\c49020;}
+{\*\listtable{\list\listtemplateid1\listhybrid{\listlevel\levelnfc23\levelnfcn23\leveljc0\leveljcn0\levelfollow0\levelstartat1\levelspace360\levelindent0{\*\levelmarker \{none\}}{\leveltext\leveltemplateid1\'00;}{\levelnumbers;}\fi-360\li720\lin720 }{\listname ;}\listid1}}
+{\*\listoverridetable{\listoverride\listid1\listoverridecount0\ls1}}
+\paperw11900\paperh16840\margl1440\margr1440\vieww11520\viewh8400\viewkind0
+\deftab720
+\pard\pardeftab720\partightenfactor0
+
+\f0\b\fs38\fsmilli19100 \AppleTypeServices\AppleTypeServicesF65539 \cf2 \cb3 \expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec2 Para saber m\'e1s: \'bfDTO o entidades?
+\fs37\fsmilli18900 \AppleTypeServices\AppleTypeServicesF65539 \cb1 \
+\pard\tx220\tx720\pardeftab720\li720\fi-720\partightenfactor0
+\ls1\ilvl0
+\fs19\fsmilli9900 \AppleTypeServices\AppleTypeServicesF65539 \cf2 \
+\ls1\ilvl0\kerning1\expnd0\expndtw0 \outl0\strokewidth0 		\expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec2 \
+\pard\pardeftab720\partightenfactor0
+
+\fs25\fsmilli12600 \AppleTypeServices \cf4 \cb5 \strokec4 \
+\pard\pardeftab720\partightenfactor0
+
+\f1\b0\fs36 \cf2 \cb1 \strokec2 Usamos DTO para representar los datos que recibimos y devolvemos a trav\'e9s de la API, pero probablemente se est\'e9 preguntando "\'bfPor qu\'e9, en lugar de crear un DTO, no devolvemos directamente la entidad JPA en el Controller?". Para hacer esto, simplemente cambie el m\'e9todo\'a0
+\f2\fs30\fsmilli15300 \cb6 list
+\f1\fs36 \cb1 \'a0en el Controller a:\
+\pard\pardeftab720\partightenfactor0
+
+\f2 \cf7 \cb6 \strokec7 @GetMapping\cf2 \strokec2 \
+\pard\pardeftab720\partightenfactor0
+\cf8 \strokec8 public\cf2 \strokec2  List<Medico> \cf9 \strokec9 listar\cf2 \strokec2 () \{\
+    \cf8 \strokec8 return\cf2 \strokec2  repository.findAll();\
+\}
+\f3\b\fs22 \cf5 \cb10 \strokec5 \
+\pard\pardeftab720\qc\partightenfactor0
+\cf5 COPIA EL C\'d3DIGO\
+\pard\pardeftab720\sa540\partightenfactor0
+
+\f1\b0\fs36 \cf2 \cb1 \strokec2 De esa forma, el c\'f3digo ser\'eda m\'e1s ligero y no necesitar\'edamos crear el DTO en el proyecto.\
+Pero, \'bfes esto realmente una buena idea?\
+\pard\pardeftab720\partightenfactor0
+
+\f0\b\fs45 \AppleTypeServices\AppleTypeServicesF65539 \cf2 Problemas de recepci\'f3n/devoluci\'f3n de la entidad JPA\
+\pard\pardeftab720\sa540\partightenfactor0
+
+\f1\b0\fs36 \AppleTypeServices \cf2 De hecho, es mucho m\'e1s simple y c\'f3modo no usar DTO, sino tratar directamente con entidades JPA en los Controllers. Sin embargo, este enfoque tiene algunas desventajas, incluida la vulnerabilidad de la aplicaci\'f3n a los ataques de\'a0
+\f4\b Mass Assignment
+\f1\b0 .\
+Uno de los problemas es el hecho de que, al devolver una entidad JPA en un m\'e9todo del Controller, Spring generar\'e1 el JSON que contiene\'a0
+\f4\b todos
+\f1\b0 \'a0sus atributos, y este no siempre es el comportamiento que queremos.\
+Eventualmente podemos tener atributos que no queremos que sean devueltos en el JSON, ya sea por razones de seguridad, en el caso de datos\'a0
+\f5\i sensibles
+\f1\i0 , o incluso porque no son utilizados por clientes API.\
+\pard\pardeftab720\partightenfactor0
+
+\f0\b\fs45 \AppleTypeServices\AppleTypeServicesF65539 \cf2 Uso de la anotaci\'f3n\'a0
+\f6\fs38\fsmilli19125 \AppleTypeServices \cb6 @JsonIgnore
+\f0\fs45 \AppleTypeServices\AppleTypeServicesF65539 \cb1 \
+\pard\pardeftab720\sa540\partightenfactor0
+
+\f1\b0\fs36 \AppleTypeServices \cf2 En esta situaci\'f3n, podr\'edamos usar la anotaci\'f3n\'a0
+\f2\fs30\fsmilli15300 \cb6 @JsonIgnore
+\f1\fs36 \cb1 , que nos ayuda a ignorar ciertas propiedades de una clase Java cuando se serializa en un objeto JSON.\
+Su uso consiste en agregar la anotaci\'f3n a los atributos que queremos ignorar cuando se genera el JSON. Por ejemplo, supongamos que tenemos una entidad JPA 'Empleado', en la que queremos ignorar el atributo 'salario':\
+\pard\pardeftab720\partightenfactor0
+
+\f2 \cf7 \cb6 \strokec7 @Getter\cf2 \strokec2 \
+\cf7 \strokec7 @NoArgsConstructor\cf2 \strokec2 \
+\cf7 \strokec7 @EqualsAndHashCode(of = "id")\cf2 \strokec2 \
+\cf7 \strokec7 @Entity(name = "Empleado")\cf2 \strokec2 \
+\cf7 \strokec7 @Table(name = "empleados")\cf2 \strokec2 \
+\pard\pardeftab720\partightenfactor0
+\cf8 \strokec8 public\cf2 \strokec2  \cf8 \strokec8 class\cf2 \strokec2  \cf9 \strokec9 Empleado\cf2 \strokec2  \{\
+\
+    \cf7 \strokec7 @Id\cf2 \strokec2 \
+    \cf7 \strokec7 @GeneratedValue(strategy = GenerationType.IDENTITY)\cf2 \strokec2 \
+    \cf8 \strokec8 private\cf2 \strokec2  Long id;\
+    \cf8 \strokec8 private\cf2 \strokec2  String nombre;\
+    \cf8 \strokec8 private\cf2 \strokec2  String email;\
+\
+    \cf7 \strokec7 @JsonIgnore\cf2 \strokec2 \
+    \cf8 \strokec8 private\cf2 \strokec2  BigDecimal salario;\
+\
+    \cf11 \strokec11 //restante del c\'f3digo omitido\'85\cf2 \strokec2 \
+\}
+\f3\b\fs22 \cf5 \cb10 \strokec5 \
+\pard\pardeftab720\qc\partightenfactor0
+\cf5 COPIA EL C\'d3DIGO\
+\pard\pardeftab720\sa540\partightenfactor0
+
+\f1\b0\fs36 \cf2 \cb1 \strokec2 En el ejemplo anterior, el atributo 'salario' de la clase 'Empleado' no se mostrar\'e1 en las respuestas JSON y el problema estar\'eda resuelto.\
+Sin embargo, puede haber alg\'fan otro endpoint de la API en el que necesitemos enviar el salario de los empleados en el JSON, en cuyo caso tendr\'edamos problemas, ya que con la anotaci\'f3n\'a0
+\f2\fs30\fsmilli15300 \cb6 @JsonIgnore
+\f1\fs36 \cb1 \'a0tal atributo\'a0
+\f4\b nunca
+\f1\b0 \'a0se enviar\'e1 en el JSON, y al eliminar la anotaci\'f3n se enviar\'e1 el atributo\'a0
+\f4\b siempre
+\f1\b0 . Por lo tanto, perdemos la flexibilidad de controlar cu\'e1ndo se deben enviar ciertos atributos en el JSON y cu\'e1ndo no.\
+\pard\pardeftab720\partightenfactor0
+
+\f0\b\fs45 \AppleTypeServices\AppleTypeServicesF65539 \cf2 DTO\
+\pard\pardeftab720\sa540\partightenfactor0
+
+\f1\b0\fs36 \AppleTypeServices \cf2 El patr\'f3n DTO (
+\f5\i Data Transfer Object
+\f1\i0 ) es un patr\'f3n arquitect\'f3nico que se us\'f3 ampliamente en aplicaciones Java distribuidas (arquitectura cliente/servidor) para representar los datos que eran enviados y recibidos entre aplicaciones cliente y servidor.\
+El patr\'f3n DTO puede (y debe) usarse cuando no queremos exponer todos los atributos de alguna entidad en nuestro proyecto, una situaci\'f3n similar a los salarios de los empleados que discutimos anteriormente. Adem\'e1s, con la flexibilidad y la opci\'f3n de filtrar qu\'e9 datos se transmiten, podemos ahorrar tiempo de procesamiento.\
+\pard\pardeftab720\partightenfactor0
+
+\f0\b\fs45 \AppleTypeServices\AppleTypeServicesF65539 \cf2 Bucle infinito que causa\'a0
+\f6\fs38\fsmilli19125 \AppleTypeServices \cb6 StackOverflowError
+\f0\fs45 \AppleTypeServices\AppleTypeServicesF65539 \cb1 \
+\pard\pardeftab720\sa540\partightenfactor0
+
+\f1\b0\fs36 \AppleTypeServices \cf2 Otro problema muy recurrente cuando se trabaja directamente con entidades JPA ocurre cuando una entidad tiene alguna auto-relaci\'f3n o relaci\'f3n bidireccional. Por ejemplo, considere las siguientes entidades JPA:\
+\pard\pardeftab720\partightenfactor0
+
+\f2 \cf7 \cb6 \strokec7 @Getter\cf2 \strokec2 \
+\cf7 \strokec7 @NoArgsConstructor\cf2 \strokec2 \
+\cf7 \strokec7 @EqualsAndHashCode(of = "id")\cf2 \strokec2 \
+\cf7 \strokec7 @Entity(name = "Producto")\cf2 \strokec2 \
+\cf7 \strokec7 @Table(name = "productos")\cf2 \strokec2 \
+\pard\pardeftab720\partightenfactor0
+\cf8 \strokec8 public\cf2 \strokec2  \cf8 \strokec8 class\cf2 \strokec2  \cf9 \strokec9 Producto\cf2 \strokec2  \{\
+\
+    \cf7 \strokec7 @Id\cf2 \strokec2 \
+    \cf7 \strokec7 @GeneratedValue(strategy = GenerationType.IDENTITY)\cf2 \strokec2 \
+    \cf8 \strokec8 private\cf2 \strokec2  Long id;\
+    \cf8 \strokec8 private\cf2 \strokec2  String nombre;\
+    \cf8 \strokec8 private\cf2 \strokec2  String descripcion;\
+    \cf8 \strokec8 private\cf2 \strokec2  BigDecimal precio;\
+\
+    \cf7 \strokec7 @ManyToOne\cf2 \strokec2 \
+    \cf7 \strokec7 @JoinColumn(name = \'93id_categoria\'94)\cf2 \strokec2 \
+    \cf8 \strokec8 private\cf2 \strokec2  Categoria categoria;\
+\
+    \cf11 \strokec11 //restante del c\'f3digo omitido\'85\cf2 \strokec2 \
+\}
+\f3\b\fs22 \cf5 \cb10 \strokec5 \
+\pard\pardeftab720\qc\partightenfactor0
+\cf5 COPIA EL C\'d3DIGO\
+\pard\pardeftab720\partightenfactor0
+
+\f2\b0\fs36 \cf7 \cb6 \strokec7 @Getter\cf2 \strokec2 \
+\cf7 \strokec7 @NoArgsConstructor\cf2 \strokec2 \
+\cf7 \strokec7 @EqualsAndHashCode(of = "id")\cf2 \strokec2 \
+\cf7 \strokec7 @Entity(name = "Categoria")\cf2 \strokec2 \
+\cf7 \strokec7 @Table(name = "categorias")\cf2 \strokec2 \
+\pard\pardeftab720\partightenfactor0
+\cf8 \strokec8 public\cf2 \strokec2  \cf8 \strokec8 class\cf2 \strokec2  \cf9 \strokec9 Categoria\cf2 \strokec2  \{\
+\
+    \cf7 \strokec7 @Id\cf2 \strokec2 \
+    \cf7 \strokec7 @GeneratedValue(strategy = GenerationType.IDENTITY)\cf2 \strokec2 \
+    \cf8 \strokec8 private\cf2 \strokec2  Long id;\
+    \cf8 \strokec8 private\cf2 \strokec2  String nombre;\
+\
+    \cf7 \strokec7 @OneToMany(mappedBy = \'93categoria\'94)\cf2 \strokec2 \
+    \cf8 \strokec8 private\cf2 \strokec2  List<Producto> productos = \cf8 \strokec8 new\cf2 \strokec2  \cf9 \strokec9 ArrayList\cf2 \strokec2 <>();\
+\
+    \cf11 \strokec11 //restante del c\'f3digo omitido\'85\cf2 \strokec2 \
+\}
+\f3\b\fs22 \cf5 \cb10 \strokec5 \
+\pard\pardeftab720\qc\partightenfactor0
+\cf5 COPIA EL C\'d3DIGO\
+\pard\pardeftab720\sa540\partightenfactor0
+
+\f1\b0\fs36 \cf2 \cb1 \strokec2 Al devolver un objeto de tipo 'Producto' en el Controller, Spring tendr\'eda problemas para generar el JSON de este objeto, lo que provocar\'eda una excepci\'f3n de tipo 'StackOverflowError'. Este problema ocurre porque el objeto producto tiene un atributo de tipo\'a0
+\f2\fs30\fsmilli15300 \cb6 Categor\'eda
+\f1\fs36 \cb1 , que a su vez tiene un atributo de tipo\'a0
+\f2\fs30\fsmilli15300 \cb6 Lista<Producto>
+\f1\fs36 \cb1 , lo que provoca un bucle infinito en el proceso de serializaci\'f3n a JSON.\
+Este problema se puede resolver usando la anotaci\'f3n\'a0
+\f2\fs30\fsmilli15300 \cb6 @JsonIgnore
+\f1\fs36 \cb1 \'a0o usando las anotaciones\'a0
+\f2\fs30\fsmilli15300 \cb6 @JsonBackReference
+\f1\fs36 \cb1 \'a0y\'a0
+\f2\fs30\fsmilli15300 \cb6 @JsonManagedReference
+\f1\fs36 \cb1 , pero tambi\'e9n se puede evitar usando un DTO que represente solo los datos que se deben devolver en el JSON.\
+}
