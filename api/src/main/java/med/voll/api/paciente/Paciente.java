@@ -22,16 +22,40 @@ public class Paciente {
     private String email;
     private String documento;
     private String telefono;
+    private boolean dadoDeAlta;
 
     @Embedded
     private Direccion direccion;
 
     public Paciente(DatosRegistroPaciente datosRegistroPaciente){
+        this.dadoDeAlta = false;
         this.nombre = datosRegistroPaciente.nombre();
         this.email = datosRegistroPaciente.email();
         this.telefono = datosRegistroPaciente.telefono();
         this.documento = datosRegistroPaciente.documento();
         this.direccion = new Direccion(datosRegistroPaciente.direccion());
+    }
+
+    public void actualizarDatosPaciente(DatosActualizacionPaciente datosActualizacionPaciente){
+        if (datosActualizacionPaciente.nombre() != null){
+            this.nombre = datosActualizacionPaciente.nombre();
+        }
+        if (datosActualizacionPaciente.documento() != null){
+            this.documento = datosActualizacionPaciente.documento();
+        }
+        if (datosActualizacionPaciente.telefono() != null){
+            this.telefono = datosActualizacionPaciente.telefono();
+        }
+        if (datosActualizacionPaciente.email() != null){
+            this.email = datosActualizacionPaciente.email();
+        }
+        if(datosActualizacionPaciente.direccion() != null){
+            this.direccion = direccion.actualizarDatos(datosActualizacionPaciente.direccion());
+        }
+    }
+
+    public void desactivarPaciente() {
+            this.dadoDeAlta = true;
     }
 
 
@@ -50,4 +74,6 @@ public class Paciente {
     public final int hashCode() {
         return this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass().hashCode() : getClass().hashCode();
     }
+
+
 }

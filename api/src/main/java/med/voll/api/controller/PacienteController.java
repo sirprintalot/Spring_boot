@@ -18,12 +18,26 @@ public class PacienteController {
     @PostMapping
     @Transactional
     public void registrarPaciente(@RequestBody @Valid DatosRegistroPaciente datos ){
-
         pacienteRepository.save(new Paciente(datos));
     }
 
     @GetMapping
-    public Page<DatosListadoPaciente> listarPacientes(@PageableDefault(size=8, sort={"nombre"})Pageable paginacion){
-        return pacienteRepository.findAll(paginacion).map(DatosListadoPaciente::new);
+    public Page<DatosListadoPaciente> listarPacientes(@PageableDefault(page = 0, size=15, sort={"nombre"})Pageable paginacion){
+//        return pacienteRepository.findAll(paginacion).map(DatosListadoPaciente::new);
+        return pacienteRepository.findByDadoDeAltaFalse(paginacion).map(DatosListadoPaciente::new);
+    }
+
+    @PutMapping
+    @Transactional
+    public void actualizarPaciente(@RequestBody @Valid DatosActualizacionPaciente datosActualizacionPaciente) {
+        Paciente paciente = pacienteRepository.getReferenceById(datosActualizacionPaciente.id());
+        paciente.actualizarDatosPaciente(datosActualizacionPaciente);
+    }
+
+    @DeleteMapping("/{id}")
+    @Transactional
+    public void eliminarPaciente(@PathVariable Long id){
+        Paciente paciente = pacienteRepository.getReferenceById(id);
+        paciente.desactivarPaciente();
     }
 }
